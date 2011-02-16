@@ -24,24 +24,31 @@ class Node
 		loc = new PVector(anchor.x+x,anchor.y+y); // The location of the Node is in reference to its anchor.
 		aVel = 0;
 		aAcc = 0.001;
-		damping = 0.5;
+		damping = 0.99;
 		k = 0.01;
+		
+		//
+		PVector diff = PVector.sub(anchor,loc);
+		
+		theta = atan2(diff.y,diff.x) ;
 	}
 	
 	void addForce()
 	{
-		
+		theta += noise(noiseoff)/12;
+		noiseoff+=0.1;
 	}
 	
 	void update()
 	{
-		aAcc = (float)rando.nextGaussian()/20;
+		aAcc = (-G/len)*cos(theta);
 		aVel += aAcc;
 		aVel *= damping;
-		theta += aVel;
 		theta = constrain(theta,PI/3,PI*2/3);
 		loc.x = len * cos(theta)+anchor.x;
 		loc.y = -len * sin(theta)+anchor.y;
+		
+		theta += aVel;
 		aAcc = 0;
 	}
 	

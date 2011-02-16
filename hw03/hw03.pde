@@ -26,9 +26,10 @@ void setup()
 	
 	PVector tempVec = new PVector(40,height-40);	
 	
-	for(int i=0; i < 100; i++)
+	for(int i=0; i < 102; i++)
 	{
 		PVector temp = new PVector((width*i/97)%width,height);
+		// PVector temp = new PVector((width/2)%width,height/2);
 		plants.add(new Seaweed(temp,5));
 	}
 }

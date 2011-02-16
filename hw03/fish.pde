@@ -23,7 +23,7 @@ class Fish
     velocity = new PVector(0,0);
     acceleration = new PVector(0,0);
 
-    mass = map(location.mag(),0,800,1,20); // wherever the fish is spawned at determines how big he gets
+    mass = map(location.mag(),0,sqrt(width*width+height*height),1,20); // wherever the fish is spawned at determines how big he gets
     skittishness = _skittishness;
     topspeed = constrain(skittishness/mass,0,2);
 	yswim = new Random();
@@ -73,6 +73,10 @@ class Fish
       acceleration.mult(.03); // Reduce acceleration!
     }
 	
+	//
+	// I REALLY WANT TO HAVE WATER CURRENTS BUT THAT MIGHT NOT HAPPEN THIS WEEK.
+	//
+	
 	// JUST KEEP SWIMMING, JUST KEEP SWIMMING
 	if(acceleration.mag() == 0)
 	{
@@ -105,7 +109,7 @@ class Fish
 		PVector force = PVector.sub(location,atap.loc); // a vector point from the tap to the fish.
 		float distance = force.mag();
 		force.normalize(); // normalize that vector, make it just a direction essentially.
-		float m = (G * atap.mass * mass) / (distance * distance);
+		float m = (-G * atap.mass * mass) / (distance * distance);
 		force.mult(m);
 		acceleration.add(force);
 	}

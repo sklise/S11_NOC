@@ -24,11 +24,11 @@ class Seaweed
 			Node temp; // Iterate through and create the specified number of Nodes
 			if(i == 0) // If this is the base node
 			{
-				temp = new Node(HALF_PI,noise(noiseoff)*30+5,loc); // Use the Seaweed.loc as the anchor point
+				temp = new Node(HALF_PI/2,noise(noiseoff)*30+5,loc); // Use the Seaweed.loc as the anchor point
 			}
 			else // otherwise use the previous node as the anchor.
 			{
-				temp = new Node(HALF_PI,noise(noiseoff)*30+5,nodes.get(i-1).loc);
+				temp = new Node(HALF_PI/2,noise(noiseoff)*30+5,nodes.get(i-1).loc);
 			}
 			nodes.add(temp); // Add the node to the list.
 			noiseoff+=0.1; // Increment the Perlin Noise.
@@ -40,6 +40,7 @@ class Seaweed
 		for(int i = 0; i < nodes.size(); i++)
 		{
 			Node n = nodes.get(i);
+			n.addForce();
 			n.update(); // Run update on all Nodes.
 		}
 	}
