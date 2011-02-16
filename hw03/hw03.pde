@@ -18,9 +18,9 @@ void setup()
 {
 	size(500,500);
 	smooth();
-	fishes = new ArrayList();
-	taps = new ArrayList();
-	plants = new ArrayList();
+	fishes = new ArrayList<Fish>();
+	taps = new ArrayList<Tap>();
+	plants = new ArrayList<Seaweed>();
 	frameRate(60);
 	rando = new Random();
 	
@@ -44,12 +44,11 @@ void draw()
 	// The Fish
 	if(fishes.size() > 0) // if there are fish
 	{
-	  for(int i=0; i<fishes.size(); i++) // iterate through all fish
+	  for(Fish f : fishes) // iterate through all fish
 	  {
-	    Fish temp = fishes.get(i);
-	    temp.forces(); // calculate forces on fish.
-	    temp.update(); // update movement of fish.
-	    temp.display(); // draw the fish to the screen.
+	    f.forces(); // calculate forces on fish.
+	    f.update(); // update movement of fish.
+	    f.display(); // draw the fish to the screen.
 	  }
 	}
 	
@@ -69,10 +68,10 @@ void draw()
 	}
 	
 	// The Seaweed
-	for(int i=0; i<plants.size(); i++)
+	for(Seaweed p : plants)
 	{
-		plants.get(i).update();
-		plants.get(i).display();
+		p.update();
+		p.display();
 	}
 
 	// Instructions
