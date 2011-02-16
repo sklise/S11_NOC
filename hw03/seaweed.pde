@@ -15,19 +15,41 @@ class Seaweed
 	
 	Seaweed(PVector _loc, int _nNodes )
 	{
-//		loc = _loc;
-//		for(int i=0; i< _nNodes; i++)
-//		{
-//			if(i>0)
-//			{
-//				
-//				Node temp = new Node( , , );
-//				nodes.add(temp);
-//			}
-//		}
+		loc = _loc;
+		nodes = new ArrayList();
+		for(int i=0; i< _nNodes; i++)
+		{
+			Node temp;
+			if(i == 0)
+			{
+				temp = new Node(HALF_PI,noise(noiseoff)*30+5,loc);
+			}
+			else
+			{
+				temp = new Node(HALF_PI,noise(noiseoff)*30+5,nodes.get(i-1).loc);
+			}
+			nodes.add(temp);
+			noiseoff+=0.1;
+		}
 	}
 	
+	void update()
+	{
+		for(int i = 0; i < nodes.size(); i++)
+		{
+			Node n = nodes.get(i);
+			n.update();
+		}
+	}
 	
+	void display()
+	{
+		for(int i = 0; i < nodes.size(); i++)
+		{
+			Node n = nodes.get(i);
+			n.display();
+		}
+	}
 }
 class Node
 {
@@ -61,11 +83,12 @@ class Node
 	
 	void addForce()
 	{
-		aAcc = (float)rando.nextGaussian()/20;
+		
 	}
 	
 	void update()
 	{
+		aAcc = (float)rando.nextGaussian()/20;
 		aVel += aAcc;
 		aVel *= damping;
 		theta += aVel;

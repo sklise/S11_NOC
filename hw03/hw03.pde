@@ -7,12 +7,12 @@
 
 ArrayList<Fish> fishes;
 ArrayList<Tap> taps;
+ArrayList<Seaweed> plants;
 float intensity;
 float G = -0.9; // Arbitrary antigravity because we are underwater.
 
-Node node1;
-Node node2;
 Random rando;
+float noiseoff;
 
 void setup()
 {
@@ -20,21 +20,24 @@ void setup()
 	smooth();
 	fishes = new ArrayList();
 	taps = new ArrayList();
+	plants = new ArrayList();
 	frameRate(60);
 	rando = new Random();
 	
-	PVector node1anc = new PVector(width/2,height/2);
-	node1 = new Node(HALF_PI,20,node1anc);
-	node2 = new Node(HALF_PI,30,node1.loc);
+	PVector tempVec = new PVector(40,height-40);	
+	
+	for(int i=0; i < 100; i++)
+	{
+		PVector temp = new PVector((width*i/97)%width,height);
+		plants.add(new Seaweed(temp,5));
+	}
 }
 
 void draw()
 {
 	// Display stuff
 	background(255,255,255);
-	noFill();
-	stroke(0);
-	rect(0,0,width-1,height-1);
+	
 	cursor(HAND);
 
 	// The Fish
@@ -65,22 +68,20 @@ void draw()
 	}
 	
 	// The Seaweed
-	node1.addForce();
-	node1.update();
-	node1.display();
-	node2.addForce();
-	node2.update();
-	node2.display();
+	for(int i=0; i<plants.size(); i++)
+	{
+		plants.get(i).update();
+		plants.get(i).display();
+	}
 
 	// Instructions
+	noFill();
+	stroke(0);
+	rect(0,0,width-1,height-1);
 	textAlign(CENTER);
 	fill(0);
 	text("RIGHT CLICK TO SPAWN FISH",width/2,height-30);
 	text("LEFT CLICK TO TAP ON GLASS",width/2,height-15);
-	
-	float temper = (float)rando.nextGaussian();
-	text(temper,width/2,20);
-	text("Theta: "+node1.theta,width/2,40);
 }
 
 void mouseClicked()
