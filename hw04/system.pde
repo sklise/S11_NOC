@@ -28,16 +28,32 @@ class System
 		// The Food
 		if(bits.size() > 0)
 		{
+			println(bits.size());
 			Iterator<Food> i = bits.iterator();
 			while(i.hasNext())
 			{
 				Food b = i.next();
+				b.follow(flowfield);
 				b.run();
-				if(b.grounded())
+				if( b.eaten(fishes) )
 				{
-					i.remove();
-					remains.add(new Detritus());
+					i.remove(); // If the food was eaten, delete it.
 				}
+				if( b.grounded() ) // If the Food has hit the ground, turn it in to a Crumb.
+				{
+					i.remove(); // Remove it from 'bits'
+					remains.add(new Crumb(b.loc,b.angles,b.r));
+				}
+			}
+		}
+		
+		if( remains.size() > 0 )
+		{
+			Iterator<Detritus> i = remains.iterator();
+			while(i.hasNext())
+			{
+				Detritus d = i.next();
+				d.display();
 			}
 		}
 	}
