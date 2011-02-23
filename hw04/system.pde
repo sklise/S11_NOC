@@ -20,6 +20,10 @@ class System
 			for(Fish f : fishes) // iterate through all fish
 			{
 				f.forces(); // calculate forces on fish.
+				if(bits.size()>0)
+				{
+					f.hunger(bits);
+				}
 				f.update(); // update movement of fish.
 				f.display(); // draw the fish to the screen.
 			}

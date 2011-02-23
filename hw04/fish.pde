@@ -2,8 +2,8 @@ class Fish
 {
 	// MOVEMENT
 	PVector loc;
-	PVector velocity;
-	PVector acceleration;
+	PVector vel;
+	PVector acc;
 
 	// TRAITS
 	float mass;
@@ -20,8 +20,8 @@ class Fish
 	Fish(PVector _location, float _skittishness)
 	{
 	  	loc = _location; // will be input from right mouse click.
-	  	velocity = new PVector(0,0);
-	  	acceleration = new PVector(0,0);
+	  	vel = new PVector(0,0);
+	  	acc = new PVector(0,0);
 	  	mass = map(loc.mag(),0,800,1,20); // wherever the fish is spawned at determines how big he gets
 	  	skittishness = _skittishness;
 	  	topspeed = constrain(skittishness/mass,1.5,2);
@@ -35,70 +35,79 @@ class Fish
 		if(loc.x < buffer)
 		{
 			// add a right pointing acceleration if the fish is too close to the left edge.
-			PVector dragLeft = new PVector(velocity.mag(),0);
+			PVector dragLeft = new PVector(vel.mag(),0);
 			dragLeft.mult(0.125);
-			acceleration.add(dragLeft);
+			acc.add(dragLeft);
 		}
 		else if (loc.x > width-buffer)
 		{
 			// add a left pointing acceleration if the fish is too close to the right edge.
-			PVector dragRight = new PVector(velocity.mag(),0);
+			PVector dragRight = new PVector(vel.mag(),0);
 			dragRight.mult(-0.125);
-			acceleration.add(dragRight);
+			acc.add(dragRight);
 		}
 		else if (loc.y > height-buffer)
 		{
 			// add a up pointing acceleration if the fish is too close to the bottom edge.
-			PVector dragDown = new PVector(0,velocity.mag());
+			PVector dragDown = new PVector(0,vel.mag());
 			dragDown.mult(-0.125);
-			acceleration.add(dragDown);
+			acc.add(dragDown);
 		}
 		else if (loc.y < buffer+7)
 		{
 			// add a down pointing acceleration if the fish is too close to the top edge.
-			PVector dragUp = new PVector(0,velocity.mag());
+			PVector dragUp = new PVector(0,vel.mag());
 			dragUp.mult(0.125);
-			acceleration.add(dragUp);
+			acc.add(dragUp);
 		}
 		  else
 		  {
-		    acceleration.x = (float)xswim.nextGaussian();
-		    acceleration.y = (float)yswim.nextGaussian()/20; // changes in Y should be smaller than X.
-		    acceleration.normalize(); // Normalize
-		    acceleration.mult(.04); // Reduce acceleration!
+		    acc.x = (float)xswim.nextGaussian();
+		    acc.y = (float)yswim.nextGaussian()/20; // changes in Y should be smaller than X.
+		    acc.normalize(); // Normalize
+		    acc.mult(.04); // Reduce acceleration!
 		  }
 
-		//
-		// I REALLY WANT TO HAVE WATER CURRENTS BUT THAT MIGHT NOT HAPPEN THIS WEEK.
-		//
-
 		// JUST KEEP SWIMMING, JUST KEEP SWIMMING
-		if(acceleration.mag() == 0)
+		if(acc.mag() == 0)
 		{
-			acceleration.x = (float)xswim.nextGaussian();
-			acceleration.y = (float)yswim.nextGaussian()/20; // changes in Y should be smaller than X.
-			acceleration.normalize(); // Normalize
-			acceleration.mult(.03); // Reduce acceleration!
+			acc.x = (float)xswim.nextGaussian();
+			acc.y = (float)yswim.nextGaussian()/20; // changes in Y should be smaller than X.
+			acc.normalize(); // Normalize
+			acc.mult(.03); // Reduce acceleration!
 		}
 	}
 
 	void update()
 	{
-		velocity.add(acceleration);
-		velocity.limit(topspeed);
-		loc.add(velocity);
-		acceleration.mult(0);
+		vel.add(acc);
+		vel.limit(topspeed);
+		loc.add(vel);
+		acc.mult(0);
 	}
 
-  	/*void isNearby(Tap atap)
+  	void hunger(ArrayList<Food> b)
 	{
-		PVector force = PVector.sub(loc,atap.loc); // a vector point from the tap to the fish.
-		float distance = force.mag();
-		force.normalize(); // normalize that vector, make it just a direction essentially.
-		float m = ( atap.mass * mass) / (distance * distance);
-		force.mult(m);
-		acceleration.add(force);
-	}*/
+		float leastDistance = MAX_FLOAT;
+		int closest = 0;
+		// Find the closest piece of food.
+		// Go towards it.
+		for(int i=0; i < b.size(); i++)
+		{
+			Food m = b.get(i);
+			float dis = dist(m.loc.x,m.loc.y,loc.x,loc.y);
+			if( dis < leastDistance )
+			{
+				leastDistance = dis;
+				closest = i;
+			}
+		}
+		Food m = b.get(closest);
+		PVector direction = PVector.sub(m.loc,loc); // Get the direction between the fish and the food
+		direction.div(leastDistance);
+		direction.mult(topspeed/2);
+		acc.add(direction);
+	}
 
   void display()
   {
@@ -107,14 +116,12 @@ class Fish
     	stroke(0);
 		strokeWeight(1);
 	    translate(loc.x,loc.y);
-		float fishHead = constrain(velocity.heading2D(),PI/3,-PI/3);
-	    rotate(velocity.heading2D());
+		float fishHead = constrain(vel.heading2D(),PI/3,-PI/3);
+	    rotate(vel.heading2D());
 	    ellipse(0,0,mass*2,mass);
 	    triangle(0-mass,0,0-mass*3/2,0+mass/2,0-mass*3/2,0-mass/2);
 	    stroke(255,0,0);
     popMatrix();
-    // debug lines
-    // line(loc.x,loc.y,(loc.x+velocity.x*90),(loc.y+velocity.y*90));
   }
 }
 

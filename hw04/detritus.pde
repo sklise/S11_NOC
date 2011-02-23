@@ -17,6 +17,7 @@ class Detritus
 
 class Crumb extends Detritus
 {
+	// A Detritus in the shape of fish food.
 	float[] angles = new float[4];
 	float r;
 	

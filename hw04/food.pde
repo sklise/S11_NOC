@@ -108,7 +108,7 @@ class Food
 		steer.limit(maxforce);  // Limit to maximum steering force
 		acc.add(steer);
 		
-		//
+		// This now is mine, you can tell because it isn't succint.
 		if(loc.x < buffer)
 		{
 			// add a right pointing acceleration if the fish is too close to the left edge.
@@ -187,7 +187,6 @@ class FlowField {
         drawVector(field[i][j],i*resolution,j*resolution,resolution-2);
       }
     }
-
   }
 
   // Renders a vector object 'v' as an arrow and a location 'x,y'
@@ -213,6 +212,4 @@ class FlowField {
     int j = (int) constrain(lookup.y/resolution,0,rows-1);
     return field[i][j].get();
   }
-
-
 }
