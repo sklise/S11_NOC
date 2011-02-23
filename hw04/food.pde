@@ -74,6 +74,7 @@ class Food
 			if( dist(f.loc.x,f.loc.y,loc.x,loc.y) <= r )
 			{
 				justOnce = true;
+				f.hunger--;
 			}
 		}
 		if(justOnce)

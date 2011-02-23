@@ -11,6 +11,7 @@ class Fish
 	float topspeed; // a topspeed of each fish, determined by skittishness/mass
 	// a big skittish fish will only move a bit.
 	// a small skittish fish is going to move more crazily.
+	int hunger;
 
 	Random yswim; // gaussian movement in y direction
 	Random xswim; // gaussian movement in x direction
@@ -27,6 +28,7 @@ class Fish
 	  	topspeed = constrain(skittishness/mass,1.5,2);
 		yswim = new Random();
 	  	xswim = new Random();
+		hunger = (int)map(mass,1,20,1,8);
 	}
 
 	void forces()
@@ -80,6 +82,11 @@ class Fish
 
 	void update()
 	{
+		if( frameCount % 10 == 0)
+		{
+			hunger++;
+			hunger = constrain(hunger,0,20);
+		}
 		vel.add(acc);
 		vel.limit(topspeed);
 		loc.add(vel);
@@ -88,25 +95,31 @@ class Fish
 
   	void hunger(ArrayList<Food> b)
 	{
-		float leastDistance = MAX_FLOAT;
-		int closest = 0;
-		// Find the closest piece of food.
-		// Go towards it.
-		for(int i=0; i < b.size(); i++)
+		if( hunger > 0 )
 		{
-			Food m = b.get(i);
-			float dis = dist(m.loc.x,m.loc.y,loc.x,loc.y);
-			if( dis < leastDistance )
+			float leastDistance = MAX_FLOAT;
+			int closest = 0;
+			// Find the closest piece of food.
+			// Go towards it.
+			for(int i=0; i < b.size(); i++)
 			{
-				leastDistance = dis;
-				closest = i;
+				Food m = b.get(i);
+				float dis = dist(m.loc.x,m.loc.y,loc.x,loc.y);
+				if( dis < leastDistance )
+				{
+					leastDistance = dis;
+					closest = i;
+				}
+			}
+			if( leastDistance <= width/2 )
+			{
+				Food m = b.get(closest);
+				PVector direction = PVector.sub(m.loc,loc); // Get the direction between the fish and the food
+				direction.div(leastDistance);
+				direction.mult(topspeed/2);
+				acc.add(direction);
 			}
 		}
-		Food m = b.get(closest);
-		PVector direction = PVector.sub(m.loc,loc); // Get the direction between the fish and the food
-		direction.div(leastDistance);
-		direction.mult(topspeed/2);
-		acc.add(direction);
 	}
 
   void display()
