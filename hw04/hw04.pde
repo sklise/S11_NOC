@@ -7,6 +7,7 @@
 // TODO:
 // - Make food.eaten() recognize the front half of the fish. (Heading 2D, mass)
 // + Make the fish want food.
+// - Make fish avoid overlapping.
 // - Get the fish moving on their own flow field.
 // - Morph a flow field over time.
 
@@ -39,6 +40,12 @@ void draw()
 	
 	// The system.
 	tank.run();
+	
+	if ( frameCount <= 1200 )
+	{
+		textAlign(CENTER);
+		text("RIGHT CLICK TO SPAWN FISH. LEFT CLICK TO DROP FOOD",width/2,height-30);
+	}
 }
 
 void mouseClicked()

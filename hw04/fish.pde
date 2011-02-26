@@ -28,7 +28,7 @@ class Fish
 	  	topspeed = constrain(skittishness/mass,1.5,2);
 		yswim = new Random();
 	  	xswim = new Random();
-		hunger = (int)map(mass,1,20,1,8);
+		hunger = (int)map(mass,1,20,1,5);
 	}
 
 	void forces()
@@ -82,10 +82,10 @@ class Fish
 
 	void update()
 	{
-		if( frameCount % 10 == 0)
+		if( frameCount % 60 == 0)
 		{
 			hunger++;
-			hunger = constrain(hunger,0,20);
+			hunger = constrain(hunger,0,10);
 		}
 		vel.add(acc);
 		vel.limit(topspeed);
